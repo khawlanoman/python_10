@@ -1,12 +1,37 @@
+from typing import List,Dict
+
+def artifact_sorter(artifacts: List[Dict]) -> List[Dict]:
+    return sorted(artifacts, key=lambda art:art["power"], reverse=True)
+
+def power_filter(mages: List[Dict], min_power: int) -> List[Dict]:
+
+    return list(filter(lambda mage: mage['power'] >= min_power, mages))
+
+def spell_transformer(spells: List[str]) -> List[str]:
+    return list(map(lambda spell: "*" + spell +"*", spells))
+
+def mage_stats(mages: List[dict]) -> Dict:
+    max_power = max(mages, key=lambda m: m["power"])["power"]
+    min_power = min(mages, key=lambda m: m["power"])["power"]
+    avg_power = sum(m["power"] for m in mages) / len(mages)
+
+    return {
+        "max_power": max_power,
+        "min_power": min_power,
+        "avg_power": f"{avg_power:.2f}"
+    }
+
+
 artifacts = [
     {"name": "Crystal Orb", "power": 85, "element": "fire"},
     {"name": "Fire Staff", "power": 92, "element": "lightning"},
 ]
-artifact_sorter = sorted(artifacts, key=lambda art:art["power"], reverse=True)
+
+artifacts_sorter = artifact_sorter(artifacts)
 
 str_list = ''
 i = 0
-for art in artifact_sorter:
+for art in artifacts_sorter:
     str_list +=(f"{art['name']} ({art['power']} power)")
     if i == 0:
         str_list += " comes before "
@@ -20,15 +45,24 @@ mages = [
     {"name": "Zephyr", "power": 78, "element": "air"},
     {"name": "Terran", "power": 80, "element": "earth"}
 ]
-min_power = min(mages, key=lambda mage: mage['power'])['power']
-power_filter = list(filter(lambda mage: mage['power'] >= min_power, mages))
 
-#print(power_filter)
+power_filters = power_filter(mages,78)
+
+print(power_filters)
 
 spells = ["fireball", "heal", "shield"]
 
-spell_transformer = list(map(lambda spell: "*" + spell +"*", spells))
+spells_transformer =  spell_transformer(spells)
 
-spell_str = " ".join(spell_transformer)
+
+spell_str = " ".join(spells_transformer)
 print("Testing spell transformer...")
 print(spell_str)
+
+mages = [
+    {"name": "Gandalf", "power": 95},
+    {"name": "Merlin", "power": 80},
+    {"name": "Morgana", "power": 70},
+]
+stats = mage_stats(mages)
+print(stats)
